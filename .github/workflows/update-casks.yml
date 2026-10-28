@@ -1,0 +1,35 @@
+name: Update casks
+
+# Checks each app's latest GitHub Release once a day and commits an updated
+# cask when there's a new one. Runs by hand too (Actions tab -> Run workflow).
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Desktop Scriptures
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 scripts/update_desktop_scriptures.py
+
+      - name: Commit
+        run: |
+          if [ -z "$(git status --porcelain Casks)" ]; then
+            echo "No changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Casks
+          git commit -m "Update casks to the latest releases"
+          git push
