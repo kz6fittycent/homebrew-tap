@@ -1,11 +1,11 @@
 name: Update casks
 
-# Checks each app's latest GitHub Release once a day and commits an updated
+# Checks each app's latest GitHub Release once a week (Mondays) and commits an updated
 # cask when there's a new one. Runs by hand too (Actions tab -> Run workflow).
 
 on:
   schedule:
-    - cron: "17 6 * * *"
+    - cron: "17 6 * * 1"
   workflow_dispatch:
 
 permissions:
